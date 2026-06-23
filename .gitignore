@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+users.xlsx
+assignments.json
+test_users.xlsx
+test_assignments.json
+~$*
