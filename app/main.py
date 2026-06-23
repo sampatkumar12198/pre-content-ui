@@ -22,6 +22,22 @@ from .routers import admin, concepts, meta, microconcepts, teaching
 _BASE_DIR = Path(__file__).resolve().parent.parent
 templates = Jinja2Templates(directory=str(_BASE_DIR / "templates"))
 
+
+def _static_v(path: str) -> str:
+    """Static URL with a ?v=<mtime> cache-buster so browsers refetch on change.
+
+    Without this, an edited admin.js/styles.css can sit behind a stale browser
+    cache and the new UI never shows up until a manual hard-refresh.
+    """
+    try:
+        version = int((_BASE_DIR / "static" / path).stat().st_mtime)
+    except OSError:
+        version = 0
+    return f"/static/{path}?v={version}"
+
+
+templates.env.globals["static_v"] = _static_v
+
 # Paths reachable without a session.
 _PUBLIC_PREFIXES = ("/login", "/logout", "/static", "/favicon")
 
